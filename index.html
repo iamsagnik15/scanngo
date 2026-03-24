@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scan-N-Go</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <h1>🛒 Scan-N-Go</h1>
+
+  <!-- 📱 Mobile Number -->
+  <div class="card">
+    <h2>Customer Details</h2>
+    <input 
+      type="text" 
+      id="phone" 
+      placeholder="Enter Mobile Number"
+      class="input"
+    >
+  </div>
+
+  <!-- 🛒 Cart -->
+  <div class="card">
+    <h2>Your Cart</h2>
+    <div id="items"></div>
+    <h3 id="total"></h3>
+  </div>
+
+  <!-- 💳 Button -->
+  <button onclick="generateQR()">Generate Payment QR</button>
+
+  <!-- 💳 Payment Section -->
+  <div id="qrBox" class="hidden">
+    <div class="card">
+      <h2>Scan to Pay</h2>
+      <div id="qrcode"></div>
+      <p class="info">Scan using Google Pay / PhonePe</p>
+    </div>
+  </div>
+
+  <!-- ✅ Receipt Section -->
+  <div id="receiptBox" class="hidden">
+    <div class="card">
+      <h2>Payment Status</h2>
+      <p id="txn"></p>
+
+      <h3>Exit Verification QR</h3>
+      <div id="receiptQR"></div>
+
+      <p class="info">Show this QR at exit gate</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

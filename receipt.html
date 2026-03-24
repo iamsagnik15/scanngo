@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scan-N-Go Receipt</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body style="text-align:center; font-family:Arial; padding:20px;">
+
+<h2>🧾 Scan-N-Go Receipt</h2>
+
+<div id="details"></div>
+<div id="qr"></div>
+
+<script>
+function getQueryParam(name) {
+  let url = new URL(window.location.href);
+  return url.searchParams.get(name);
+}
+
+let rawData = getQueryParam("data");
+
+if (!rawData) {
+  document.body.innerHTML = "<h2>No receipt data found ❌</h2>";
+} else {
+  let data = JSON.parse(decodeURIComponent(rawData));
+
+  document.getElementById("details").innerHTML = `
+    <p><b>Transaction:</b> ${data.txn}</p>
+    <p><b>Total:</b> ₹${data.total}</p>
+    <p><b>Status:</b> ${data.status}</p>
+    <h3>Items:</h3>
+    ${data.items.map(i => `<p>${i.name} ₹${i.price}</p>`).join("")}
+  `;
+
+  new QRCode(document.getElementById("qr"), {
+    text: JSON.stringify(data),
+    width: 180,
+    height: 180
+  });
+}
+</script>
+
+</body>
+</html>

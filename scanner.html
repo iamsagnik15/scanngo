@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scan-N-Go Security</title>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e3a8a);
+  color: white;
+  text-align: center;
+}
+
+.container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+}
+
+.card {
+  background: rgba(255,255,255,0.05);
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  margin-top: 20px;
+}
+
+#reader {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.success {
+  color: #10b981;
+}
+
+.error {
+  color: #ef4444;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🛡️ Exit Verification</h1>
+
+  <div id="reader"></div>
+
+  <div id="result" class="card">
+    <p>Scan QR to verify payment</p>
+  </div>
+</div>
+
+<script>
+function onScanSuccess(decodedText) {
+  try {
+    let data = JSON.parse(decodedText);
+
+    if (data.status === "PAID") {
+      let output = `
+        <h2 class="success">✅ PAYMENT VERIFIED</h2>
+        <p><b>Transaction:</b> ${data.txn}</p>
+        <p><b>Total:</b> ₹${data.total}</p>
+        <h3>Items:</h3>
+        ${data.items.map(i => `
+          <div class="item">
+            <span>${i.name}</span>
+            <span>₹${i.price}</span>
+          </div>
+        `).join("")}
+      `;
+
+      document.getElementById("result").innerHTML = output;
+
+    } else {
+      document.getElementById("result").innerHTML =
+        "<h2 class='error'>❌ PAYMENT NOT VERIFIED</h2>";
+    }
+
+  } catch (err) {
+    document.getElementById("result").innerHTML =
+      "<h2 class='error'>❌ INVALID QR CODE</h2>";
+  }
+}
+
+// Start camera
+let html5QrCode = new Html5Qrcode("reader");
+
+Html5Qrcode.getCameras().then(devices => {
+  if (devices.length) {
+    html5QrCode.start(
+      devices[0].id,
+      {
+        fps: 10,
+        qrbox: 250
+      },
+      onScanSuccess
+    );
+  }
+});
+</script>
+
+</body>
+</html>
